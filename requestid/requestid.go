@@ -16,6 +16,7 @@ const (
 	DeprecatedRequestIDKey = "Request-Id"
 	DefaultRequestIDKey    = "X-Request-ID"
 	RequestIDLogKey        = "request_id"
+	OphIDLogKey            = "ophid"
 )
 
 // HandleRequestID either extracts a existing and valid request ID from the context or generates a new one
@@ -51,6 +52,15 @@ func NewContext(ctx context.Context, reqID string) context.Context {
 	return metadata.NewOutgoingContext(ctx, md)
 }
 
+func NewContextWithOphID(ctx context.Context, ophid string) context.Context {
+	md := metadata.Pairs(DefaultRequestIDKey, ophid)
+	return metadata.NewOutgoingContext(ctx, md)
+}
+
 func addRequestIDToLogger(ctx context.Context, reqID string) {
 	ctxlogrus.AddFields(ctx, logrus.Fields{RequestIDLogKey: reqID})
+}
+
+func addOphIDToLogger(ctx context.Context, ophid string) {
+	ctxlogrus.AddFields(ctx, logrus.Fields{OphIDLogKey: ophid})
 }
